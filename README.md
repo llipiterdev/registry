@@ -4,7 +4,7 @@ Adaptación del módulo [registraduria](https://github.com/CesarAVegaF312/TYVS-T
 
 ## Integrantes
 
-Ver [`integrantes.txt`](./integrantes.txt) — completar nombres y correos `@unisabana.edu.co` antes de entregar.
+Ver [`integrantes.txt`](./integrantes.txt)
 
 ## Comandos
 
