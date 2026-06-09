@@ -37,8 +37,7 @@ export class Registry {
       this.repo.save(person.id, person.name, person.age, person.alive);
       return RegisterResult.VALID;
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : String(error);
+      const message = error instanceof Error ? error.message : String(error);
       const type =
         error instanceof Error ? error.constructor.name : 'UnknownError';
       throw new RegistryPersistenceException(

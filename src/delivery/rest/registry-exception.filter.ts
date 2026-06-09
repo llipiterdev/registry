@@ -44,7 +44,11 @@ export class RegistryExceptionFilter implements ExceptionFilter {
     if (typeof response === 'string') {
       return response;
     }
-    if (typeof response === 'object' && response !== null && 'message' in response) {
+    if (
+      typeof response === 'object' &&
+      response !== null &&
+      'message' in response
+    ) {
       const { message } = response as { message: string | string[] };
       return Array.isArray(message) ? message.join(', ') : message;
     }

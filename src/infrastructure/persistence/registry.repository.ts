@@ -21,9 +21,7 @@ export class RegistryRepository implements RegistryRepositoryPort {
   }
 
   existsById(id: number): boolean {
-    const row = this.db
-      .prepare('SELECT 1 FROM registry WHERE id = ?')
-      .get(id);
+    const row = this.db.prepare('SELECT 1 FROM registry WHERE id = ?').get(id);
     return row !== undefined;
   }
 

@@ -73,6 +73,17 @@ npm run test:cov
 npm run verify
 ```
 
+## CI (GitHub Actions)
+
+En cada **push** a cualquier rama y en cada **pull request** hacia `main` se ejecuta el pipeline de integración continua:
+
+- Pruebas unitarias e integración (`npm test`)
+- Pruebas e2e (`npm run test:e2e`)
+- Análisis estático (`npm run lint:ci`)
+- Compilación (`npm run build`)
+
+Workflow: [`.github/workflows/ci.yml`](./.github/workflows/ci.yml)
+
 ## API
 
 **`POST /register`**

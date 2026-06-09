@@ -72,7 +72,9 @@ describe('Registry (con mock del repositorio)', () => {
     const person = new Person('María', 300, 30, Gender.FEMALE, true);
 
     // Act & Assert
-    expect(() => registry.registerVoter(person)).toThrow(RegistryPersistenceException);
+    expect(() => registry.registerVoter(person)).toThrow(
+      RegistryPersistenceException,
+    );
     expect(() => registry.registerVoter(person)).toThrow(/Persistencia:/);
     expect(repo.save).toHaveBeenCalled();
   });
