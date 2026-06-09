@@ -6,4 +6,5 @@ async function bootstrap() {
   await app.listen(process.env.PORT ?? 3000);
 }
 console.log('Starting server...');
+console.log('PORT:', process.env.PORT);
 void bootstrap();
