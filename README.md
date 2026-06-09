@@ -93,10 +93,10 @@ Workflow: [`.github/workflows/ci.yml`](./.github/workflows/ci.yml)
 | Dónde | Qué verás |
 |-------|-----------|
 | **Checks → Jest** | Lista de tests pasados/fallidos |
-| **Summary del job** | Tabla markdown con % de cobertura por archivo |
-| **Comentario en el PR** | Reporte de cobertura con diff vs la rama base |
+| **Summary del job** | Tabla markdown con % de cobertura global |
+| **Comentario en el PR** | [Codecov](https://codecov.io/gh/llipiterdev/registry) — diff de cobertura vs `main` |
 | **Artifacts** | Reporte HTML descargable (`coverage-report`) |
-| **[Codecov](https://codecov.io/gh/llipiterdev/registry)** | Dashboard con gráficos, historial y diff por PR |
+| **Dashboard Codecov** | Gráficos, historial y detalle por archivo |
 
 ### Configurar Codecov (una sola vez)
 

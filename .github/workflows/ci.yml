@@ -77,13 +77,6 @@ jobs:
           console.log(summary);
           EOF
 
-      - name: Comentario de cobertura en el PR
-        uses: ArtiomTr/jest-coverage-report-action@v2
-        if: github.event_name == 'pull_request' && always()
-        with:
-          package-name: registry
-          coverage-file: coverage/coverage-final.json
-
       - name: Subir reporte HTML de cobertura
         uses: actions/upload-artifact@v4
         if: always()
