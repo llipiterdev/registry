@@ -3,6 +3,13 @@ name: CI
 on:
   pull_request:
     branches: [main, master]
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
 
 jobs:
   build-and-test:
@@ -21,11 +28,72 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
-      - name: Ejecutar pruebas unitarias e integración
-        run: npm test
+      - name: Ejecutar pruebas unitarias e integración (con cobertura)
+        run: npm run test:ci
 
       - name: Ejecutar pruebas e2e
-        run: npm run test:e2e
+        if: always()
+        run: npm run test:e2e:ci
+
+      - name: Publicar resultados de pruebas en GitHub
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Jest
+          path: test-results/*.xml
+          reporter: jest-junit
+          fail-on-error: true
+
+      - name: Resumen de cobertura en GitHub
+        if: always() && hashFiles('coverage/coverage-summary.json') != ''
+        run: |
+          node << 'EOF'
+          const fs = require('fs');
+          const firstLine = fs
+            .readFileSync('coverage/coverage-summary.json', 'utf8')
+            .split('\n')[0];
+          const { total } = JSON.parse(`${firstLine}}`);
+
+          const fmt = (metric) => {
+            const { pct, covered, total: t } = total[metric];
+            return `| ${metric} | ${pct}% | ${covered}/${t} |`;
+          };
+
+          const summary = [
+            '## Cobertura de pruebas (Jest)',
+            '',
+            '| Métrica | Cobertura | Cubierto/Total |',
+            '|---------|-----------|----------------|',
+            fmt('lines'),
+            fmt('statements'),
+            fmt('functions'),
+            fmt('branches'),
+            '',
+            'Reporte HTML disponible en el artifact `coverage-report`.',
+            'Dashboard: https://codecov.io/gh/llipiterdev/registry',
+          ].join('\n');
+
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary);
+          console.log(summary);
+          EOF
+
+      - name: Subir reporte HTML de cobertura
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/lcov-report/
+          retention-days: 14
+
+      - name: Subir cobertura a Codecov
+        uses: codecov/codecov-action@v5
+        if: always()
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage/lcov.info
+          flags: unittests
+          name: registry
+          fail_ci_if_error: false
 
       - name: Análisis estático (ESLint)
         run: npm run lint:ci
