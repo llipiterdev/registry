@@ -1,50 +1,105 @@
-# Registraduría — NestJS
+# Registry — Registraduría (NestJS)
 
-Adaptación del módulo [registraduria](https://github.com/CesarAVegaF312/TYVS-Taller_Pruebas_Integracion/tree/master/registraduria) para el taller de **Pruebas de Integración y Sistema**.
+Servicio REST para registro de votantes, desarrollado en **NestJS** con **arquitectura limpia** (hexagonal). Es la adaptación del módulo [`registraduria`](https://github.com/CesarAVegaF312/TYVS-Taller_Pruebas_Integracion/tree/master/registraduria) del taller de Pruebas de Integración y Sistema (Universidad de La Sabana).
 
-## Integrantes
+## ¿Qué hace?
 
-Ver [`integrantes.txt`](./integrantes.txt)
+Expone un endpoint `POST /register` que recibe los datos de una persona y devuelve el resultado del registro como texto plano:
+
+| Resultado | Significado |
+|-----------|-------------|
+| `VALID` | Registro exitoso |
+| `DUPLICATED` | El ID ya existe |
+| `UNDERAGE` | Menor de 18 años |
+| `DEAD` | Persona fallecida |
+| `INVALID` | Datos inválidos (ID ≤ 0) |
+
+## Stack
+
+- **Runtime:** Node.js + TypeScript
+- **Framework:** NestJS
+- **Base de datos:** SQLite en memoria (`better-sqlite3`)
+- **Pruebas:** Jest + supertest
+
+## Estructura del proyecto
+
+```
+src/
+├── domain/           # Modelos, enums, constantes, excepciones
+├── application/      # Casos de uso y puertos
+├── infrastructure/   # Persistencia (RegistryRepository)
+├── delivery/         # Controller REST y filtros HTTP
+└── config/           # Providers e inyección de dependencias
+
+test/
+└── delivery/rest/    # Pruebas de sistema (e2e)
+```
+
+## Requisitos
+
+- Node.js ≥ 18
+- npm ≥ 9
+
+## Instalación
+
+```bash
+git clone https://github.com/llipiterdev/registry.git
+cd registry
+npm install
+```
 
 ## Comandos
 
 ```bash
-npm install
-npm run verify    # equiv. mvn clean verify
-npm run test:cov  # equiv. JaCoCo → coverage/lcov-report/index.html
+# Desarrollo
 npm run start:dev
+
+# Compilar
+npm run build
+
+# Producción
+npm run start:prod
+
+# Tests unitarios e integración
+npm test
+
+# Tests de sistema (HTTP)
+npm run test:e2e
+
+# Cobertura (reporte en coverage/lcov-report/index.html)
+npm run test:cov
+
+# Build + tests + cobertura (equiv. mvn verify)
+npm run verify
 ```
 
-## Checklist de entrega
+## API
 
-| # | Requisito | Estado |
-|---|-----------|--------|
-| 1 | Repositorio Git público | ⬜ Pendiente (subir a GitHub) |
-| 1 | `.gitignore` | ✅ |
-| 1 | `integrantes.txt` | ⚠️ Plantilla — completar datos |
-| 1 | Rama ejecutable (`npm run verify`) | ✅ |
-| 2 | Wiki en GitHub | ⚠️ Copiar desde `docs/wiki/` |
-| 3 | ≥3 pruebas integración BD (VALID, DUPLICATED, UNDERAGE, DEAD) | ✅ 6 tests |
-| 4 | ≥2 pruebas mocks + excepción | ✅ 3 tests |
-| 5 | ≥2 pruebas HTTP (200, 400, 500) | ✅ 3 tests e2e |
-| 6 | Cobertura ≥80% global | ✅ ~85% líneas |
-| 7 | Matriz de pruebas | ✅ `docs/matriz-pruebas.md` |
-| 8 | `defectos.md` | ✅ 2 defectos documentados |
-| 9 | Calidad código (constantes, excepciones) | ✅ |
-| 10 | Reflexión final en Wiki | ⚠️ Completar en `docs/wiki/08-Conclusiones.md` |
+**`POST /register`**
+
+```bash
+curl -X POST http://localhost:3000/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Ana","id":100,"age":30,"gender":"FEMALE","alive":true}'
+```
+
+**Respuesta:** `200 OK` — body: `VALID` (text/plain)
 
 ## Documentación
 
-- Wiki (plantillas): [`docs/wiki/`](./docs/wiki/)
-- Matriz de pruebas: [`docs/matriz-pruebas.md`](./docs/matriz-pruebas.md)
-- Defectos: [`defectos.md`](./defectos.md)
-
-## Cobertura actual
-
-| Paquete | Líneas |
+| Recurso | Enlace |
 |---------|--------|
-| Global | ~85% |
-| `application` | ~96% |
-| `delivery` | ~94% |
+| **Wiki del proyecto** | [Registry Wiki](https://github.com/llipiterdev/registry/wiki/Registry-Wiki) |
+| Matriz de pruebas | [`docs/matriz-pruebas.md`](./docs/matriz-pruebas.md) |
+| Gestión de defectos | [`defectos.md`](./defectos.md) |
+| Integrantes | [`integrantes.txt`](./integrantes.txt) |
 
-Reporte: `coverage/lcov-report/index.html` (generar con `npm run test:cov`).
+La Wiki incluye arquitectura, tipos de pruebas, evidencias de ejecución, cobertura y conclusiones técnicas.
+
+## Referencias
+
+- Taller original (Java/Spring Boot): [TYVS-Taller_Pruebas_Integracion](https://github.com/CesarAVegaF312/TYVS-Taller_Pruebas_Integracion)
+
+## Licencia
+
+Proyecto académico — UNLICENSED.
