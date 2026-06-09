@@ -1,10 +1,20 @@
-import { Body, Controller, Header, HttpCode, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Header,
+  HttpCode,
+  Post,
+  UseFilters,
+} from '@nestjs/common';
 import { Registry } from '../../application/usecase/registry.usecase';
+import { InvalidGenderException } from '../../domain/exceptions/invalid-gender.exception';
 import { Gender } from '../../domain/model/gender.enum';
 import { Person } from '../../domain/model/person.entity';
 import { PersonDto } from '../../domain/model/rq/person.dto';
+import { RegistryExceptionFilter } from './registry-exception.filter';
 
 @Controller('register')
+@UseFilters(RegistryExceptionFilter)
 export class RegistryController {
   constructor(private readonly registry: Registry) {}
 
@@ -24,8 +34,8 @@ export class RegistryController {
   }
 
   private parseGender(value: string): Gender {
-    if (!Object.values(Gender).includes(value as Gender)) {
-      throw new Error(`No enum constant Gender.${value}`);
+    if (!value || !Object.values(Gender).includes(value as Gender)) {
+      throw new InvalidGenderException(value ?? 'undefined');
     }
     return value as Gender;
   }

@@ -1,8 +1,12 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { REGISTRY_REPOSITORY_PORT } from '../port/out/registry-repository.port';
 import type { RegistryRepositoryPort } from '../port/out/registry-repository.port';
+import { RegistryPersistenceException } from '../../domain/exceptions/registry-persistence.exception';
 import { Person } from '../../domain/model/person.entity';
-import { MIN_VOTER_AGE } from '../../domain/model/registry.constants';
+import {
+  MIN_VALID_ID,
+  MIN_VOTER_AGE,
+} from '../../domain/model/registry.constants';
 import { RegisterResult } from '../../domain/model/register-result.enum';
 
 @Injectable()
@@ -16,7 +20,7 @@ export class Registry {
     if (person === null) {
       return RegisterResult.INVALID;
     }
-    if (person.id <= 0) {
+    if (person.id < MIN_VALID_ID) {
       return RegisterResult.INVALID;
     }
     if (!person.alive) {
@@ -37,7 +41,11 @@ export class Registry {
         error instanceof Error ? error.message : String(error);
       const type =
         error instanceof Error ? error.constructor.name : 'UnknownError';
-      throw new Error(`Persistencia: ${type} - ${message}`);
+      throw new RegistryPersistenceException(
+        type,
+        message,
+        error instanceof Error ? error : undefined,
+      );
     }
   }
 }
