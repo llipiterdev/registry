@@ -84,6 +84,15 @@ En cada **push** a cualquier rama y en cada **pull request** hacia `main` se eje
 
 Workflow: [`.github/workflows/ci.yml`](./.github/workflows/ci.yml)
 
+Al ejecutarse en un PR, GitHub muestra:
+
+| Dónde | Qué verás |
+|-------|-----------|
+| **Checks → Jest** | Lista de tests pasados/fallidos |
+| **Summary del job** | Tabla markdown con % de cobertura por archivo |
+| **Comentario en el PR** | Reporte de cobertura con diff vs la rama base |
+| **Artifacts** | Reporte HTML descargable (`coverage-report`) |
+
 ## API
 
 **`POST /register`**

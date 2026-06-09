@@ -8,6 +8,9 @@ target/
 # Coverage
 coverage/
 
+# CI test reports
+test-results/
+
 # IDE
 .idea/
 .vscode/
