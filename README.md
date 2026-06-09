@@ -1,5 +1,8 @@
 # Registry — Registraduría (NestJS)
 
+[![CI](https://github.com/llipiterdev/registry/actions/workflows/ci.yml/badge.svg)](https://github.com/llipiterdev/registry/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/llipiterdev/registry/graph/badge.svg)](https://codecov.io/gh/llipiterdev/registry)
+
 Servicio REST para registro de votantes, desarrollado en **NestJS** con **arquitectura limpia** (hexagonal). Es la adaptación del módulo [`registraduria`](https://github.com/CesarAVegaF312/TYVS-Taller_Pruebas_Integracion/tree/master/registraduria) del taller de Pruebas de Integración y Sistema (Universidad de La Sabana).
 
 ## ¿Qué hace?
@@ -75,16 +78,17 @@ npm run verify
 
 ## CI (GitHub Actions)
 
-En cada **push** a cualquier rama y en cada **pull request** hacia `main` se ejecuta el pipeline de integración continua:
+En cada **pull request** y cada **push a `main`** se ejecuta el pipeline de integración continua:
 
-- Pruebas unitarias e integración (`npm test`)
-- Pruebas e2e (`npm run test:e2e`)
+- Pruebas unitarias e integración con cobertura (`npm run test:ci`)
+- Pruebas e2e (`npm run test:e2e:ci`)
 - Análisis estático (`npm run lint:ci`)
 - Compilación (`npm run build`)
+- Publicación de reportes a GitHub y [Codecov](https://codecov.io/gh/llipiterdev/registry)
 
 Workflow: [`.github/workflows/ci.yml`](./.github/workflows/ci.yml)
 
-Al ejecutarse en un PR, GitHub muestra:
+### Reportes visibles en GitHub
 
 | Dónde | Qué verás |
 |-------|-----------|
@@ -92,6 +96,17 @@ Al ejecutarse en un PR, GitHub muestra:
 | **Summary del job** | Tabla markdown con % de cobertura por archivo |
 | **Comentario en el PR** | Reporte de cobertura con diff vs la rama base |
 | **Artifacts** | Reporte HTML descargable (`coverage-report`) |
+| **[Codecov](https://codecov.io/gh/llipiterdev/registry)** | Dashboard con gráficos, historial y diff por PR |
+
+### Configurar Codecov (una sola vez)
+
+1. Entra a [codecov.io](https://codecov.io) e inicia sesión con GitHub.
+2. Agrega el repositorio `llipiterdev/registry`.
+3. Copia el **token** del repo.
+4. En GitHub: **Settings → Secrets and variables → Actions → New repository secret**
+5. Nombre: `CODECOV_TOKEN`, valor: el token de Codecov.
+
+Tras el primer PR o push a `main` con el secret configurado, el badge de cobertura en este README se actualizará automáticamente.
 
 ## API
 
