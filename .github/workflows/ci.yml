@@ -45,13 +45,37 @@ jobs:
           fail-on-error: true
 
       - name: Resumen de cobertura en GitHub
-        uses: irongut/CodeCoverageSummary@v1.3.0
-        if: always()
-        with:
-          filename: coverage/coverage-summary.json
-          format: markdown
-          output: both
-          thresholds: '80 70'
+        if: always() && hashFiles('coverage/coverage-summary.json') != ''
+        run: |
+          node << 'EOF'
+          const fs = require('fs');
+          const firstLine = fs
+            .readFileSync('coverage/coverage-summary.json', 'utf8')
+            .split('\n')[0];
+          const { total } = JSON.parse(`${firstLine}}`);
+
+          const fmt = (metric) => {
+            const { pct, covered, total: t } = total[metric];
+            return `| ${metric} | ${pct}% | ${covered}/${t} |`;
+          };
+
+          const summary = [
+            '## Cobertura de pruebas (Jest)',
+            '',
+            '| Métrica | Cobertura | Cubierto/Total |',
+            '|---------|-----------|----------------|',
+            fmt('lines'),
+            fmt('statements'),
+            fmt('functions'),
+            fmt('branches'),
+            '',
+            'Reporte HTML disponible en el artifact `coverage-report`.',
+            'Dashboard: https://codecov.io/gh/llipiterdev/registry',
+          ].join('\n');
+
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary);
+          console.log(summary);
+          EOF
 
       - name: Comentario de cobertura en el PR
         uses: ArtiomTr/jest-coverage-report-action@v2
