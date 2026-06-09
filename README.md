@@ -98,16 +98,6 @@ Workflow: [`.github/workflows/ci.yml`](./.github/workflows/ci.yml)
 | **Artifacts** | Reporte HTML descargable (`coverage-report`) |
 | **Dashboard Codecov** | Gráficos, historial y detalle por archivo |
 
-### Configurar Codecov (una sola vez)
-
-1. Entra a [codecov.io](https://codecov.io) e inicia sesión con GitHub.
-2. Agrega el repositorio `llipiterdev/registry`.
-3. Copia el **token** del repo.
-4. En GitHub: **Settings → Secrets and variables → Actions → New repository secret**
-5. Nombre: `CODECOV_TOKEN`, valor: el token de Codecov.
-
-Tras el primer PR o push a `main` con el secret configurado, el badge de cobertura en este README se actualizará automáticamente.
-
 ## API
 
 **`POST /register`**
